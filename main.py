@@ -9,44 +9,45 @@ from models import Base
 Base.metadata.create_all(bind=engine)
 
 # Leer el DataFrame Clientes
-df_clientes = pd.read_csv('clase4h/Clientes.csv', sep=';', decimal=',')
+df_cliente = pd.read_csv('datasets/cliente.csv', sep=',', decimal=',', encoding='latin-1')
 
 # Leer el DataFrame Otros 
-df_compras = pd.read_csv('clase4h/Compra.csv', sep=';', decimal=',')
-df_gastos = pd.read_csv('clase4h/Gasto.csv', sep=';', decimal=',')
-df_tipos_gasto = pd.read_csv('clase4h/TiposDeGasto.csv', sep=',', decimal=',')
-df_ventas = pd.read_csv('clase4h/Venta.csv', sep=',', decimal=',')
-df_sucursales = pd.read_csv('clase4h/Sucursales.csv', sep=';', decimal=',')
+df_compra = pd.read_csv('datasets/compra.csv', sep=';', decimal=',', encoding='latin-1')
+df_gasto = pd.read_csv('datasets/gasto.csv', sep=',', encoding='latin-1')
+df_tipos_gasto = pd.read_csv('datasets/tipo_gasto.csv', sep=',', decimal=',', encoding='latin-1')
+df_venta = pd.read_csv('datasets/venta.csv', sep=',', decimal=',',encoding='latin-1')
+df_sucursal = pd.read_csv('datasets/sucursal.csv', sep=',', encoding='latin-1')
 
+df_calendario = pd.read_csv('datasets/calendario.csv', sep=',', decimal=',',encoding='latin-1')
+df_canal_venta = pd.read_csv('datasets/canal_venta.csv', sep=',', encoding='latin-1')
+df_empleado = pd.read_csv('datasets/empleado.csv', sep=',', encoding='latin-1')
+df_localidad = pd.read_csv('datasets/localidad.csv', sep=',', encoding='latin-1')
+df_producto = pd.read_csv('datasets/producto.csv', sep=',', encoding='latin-1')
+df_provincia = pd.read_csv('datasets/provincia.csv', sep=',', encoding='latin-1')
 
-# ... (Aquí se puede hacer cualquier manipulación necesaria en el DataFrame)
-# Dataframe para tratar
-print(df_clientes.head())
-print(df_tipos_gasto.info())
+df_comision_c = pd.read_csv('datasets/c_centro.csv', sep=',', encoding='latin-1')
+df_comision_r = pd.read_csv('datasets/c_crosas.csv', sep=',', encoding='latin-1')
+df_comision_q = pd.read_csv('datasets/c_quiroz.csv', sep=',', encoding='latin-1')
+# Concatenar los DataFrames verticalmente
+df_comision = pd.concat([df_comision_c, df_comision_r, df_comision_q], ignore_index=True)
 
-df_clientes.drop('col10', axis=1, inplace=True)
-print(df_clientes.info())
-# Convertir columnas a los tipos de datos deseados
-df_clientes['ID'] = df_clientes['ID'].astype(int)
-df_clientes['Provincia'] = df_clientes['Provincia'].astype(str)
-df_clientes['Nombre_y_Apellido'] = df_clientes['Nombre_y_Apellido'].astype(str)
-df_clientes['Domicilio'] = df_clientes['Domicilio'].astype(str)
-df_clientes['Telefono'] = df_clientes['Telefono'].astype(str)
-df_clientes['Edad'] = df_clientes['Edad'].astype(int)
-df_clientes['Localidad'] = df_clientes['Localidad'].astype(str)
-df_clientes['X'] = df_clientes['X'].astype(float)
-df_clientes['Y'] = df_clientes['Y'].astype(float)
-df_clientes['Fecha_Alta'] = pd.to_datetime(df_clientes['Fecha_Alta'])
-df_clientes['Usuario_Alta'] = df_clientes['Usuario_Alta'].astype(str)
-df_clientes['Fecha_Ultima_Modificacion'] = pd.to_datetime(df_clientes['Fecha_Ultima_Modificacion'])
-df_clientes['Usuario_Ultima_Modificacion'] = df_clientes['Usuario_Ultima_Modificacion'].astype(str)
-df_clientes['Marca_Baja'] = df_clientes['Marca_Baja'].astype(int)
-
+# Tratamiento de datos
+df_cliente['Latitud'] = df_cliente['Latitud'].astype(float)
+df_cliente['Longitud'] = df_cliente['Longitud'].astype(float)
+df_cliente['Telefono'] = df_cliente['Telefono'].astype(str)
 
 df_tipos_gasto['Monto_Aproximado'] = df_tipos_gasto['Monto_Aproximado'].astype(float)
 
-names_columns = df_clientes.columns
-print(names_columns)
+df_gasto['Fecha'] = pd.to_datetime(df_gasto['Fecha'], format='%Y-%m-%d')
+
+
+df_venta['Fecha'] = pd.to_datetime(df_venta['Fecha'], format='%Y-%m-%d')
+df_venta['Fecha_Entrega'] = pd.to_datetime(df_venta['Fecha_Entrega'], format='%Y-%m-%d')
+df_venta['Precio'] = df_venta['Precio'].astype(float)
+
+df_calendario.rename(columns={'IdFecha': 'idcalendario'}, inplace=True)
+df_calendario['fecha'] = pd.to_datetime(df_calendario['fecha'], format='%Y-%m-%d')
+
 
 
 # Inicializar la sesión
@@ -54,15 +55,21 @@ db = SessionLocal()
 
 try:
     # Migrar DataFrame a la base de datos MySQL
-    #df_clientes.to_sql(name='clientes', con=engine, if_exists='replace', index=False)
+    df_cliente.to_sql(name='cliente', con=engine, if_exists='replace', index=False)
 
-
-    # ... (Aquí podrías realizar operaciones adicionales si lo necesitas)
-    df_compras.to_sql(name='compras', con=engine, if_exists='replace', index=False)
-    df_gastos.to_sql(name='gastos', con=engine, if_exists='replace', index=False)
+    df_compra.to_sql(name='compra', con=engine, if_exists='replace', index=False)
+    df_gasto.to_sql(name='gasto', con=engine, if_exists='replace', index=False)
     df_tipos_gasto.to_sql(name='tipos_gastos', con=engine, if_exists='replace', index=False)
-    df_ventas.to_sql(name='ventas', con=engine, if_exists='replace', index=False)
-    df_sucursales.to_sql(name='sucursales', con=engine, if_exists='replace', index=False)
+    df_venta.to_sql(name='venta', con=engine, if_exists='replace', index=False)
+    df_sucursal.to_sql(name='sucursal', con=engine, if_exists='replace', index=False)
+
+    df_calendario.to_sql(name='calendario', con=engine, if_exists='replace', index=False)
+    df_canal_venta.to_sql(name='canal_venta', con=engine, if_exists='replace', index=False)
+    df_empleado.to_sql(name='empleado', con=engine, if_exists='replace', index=False)
+    df_localidad.to_sql(name='localidad', con=engine, if_exists='replace', index=False)
+    df_producto.to_sql(name='producto', con=engine, if_exists='replace', index=False)
+    df_provincia.to_sql(name='provincia', con=engine, if_exists='replace', index=False)
+    df_comision.to_sql(name='comision', con=engine, if_exists='replace', index=False)
 
     # Confirmar los cambios en la base de datos
     db.commit()

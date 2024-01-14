@@ -1,6 +1,7 @@
 Homework 4 M3.md
 __pycache__
 .vscode 
-clase4h/Clientes_bkp.csv
-bluemysql.session.sql
-clase4h/*.csv
+
+Checkpoint_Create_Insert.sql
+datasets/*.csv
+local.ipynb

@@ -4,32 +4,20 @@ from database import Base, engine
 from sqlalchemy.orm import relationship
 
 class Cliente(Base):
-    __tablename__ = 'clientes'
+    __tablename__ = 'cliente'
 
-    ID = Column(Integer, primary_key=True)
-    Provincia = Column(String(100))
-    Nombre_y_Apellido = Column(String(200))
-    Domicilio = Column(String(200))
-    Telefono = Column(String(20))
+    IdCliente = Column(Integer, primary_key=True)
+    Nombre_y_Apellido = Column(String(500))
+    Domicilio = Column(String(500))
+    Telefono = Column(String(100))
     Edad = Column(Integer)
-    Localidad = Column(String(100))
-    X = Column(Float)
-    Y = Column(Float)
-    Fecha_Alta = Column(Date)
-    Usuario_Alta = Column(String(50))
-    Fecha_Ultima_Modificacion = Column(Date)
-    Usuario_Ultima_Modificacion = Column(String(50))
-    Marca_Baja = Column(Integer)
+    Rango_Etario = Column(String(255))
+    IdLocalidad = Column(Integer)
+    Latitud = Column(Float)
+    Longitud = Column(Float)
 
-"""
-IdCompra,Fecha,IdProducto,Cantidad,Precio,IdProveedor
-1,2015-01-30,42832,13,560.51,12
-2,2015-01-30,42833,11,497.58,7
-3,2015-01-30,42834,1,588.5,6
-4,2015-01-30,42835,9,567.66,14
-"""
 class Compra(Base):
-    __tablename__= 'compras'
+    __tablename__= 'compra'
     IdCompra = Column(Integer, primary_key=True)
     Fecha = Column(Date) 
     IdProducto = Column(Integer)
@@ -39,7 +27,7 @@ class Compra(Base):
 
 
 class Gasto(Base):
-    __tablename__ = 'gastos'
+    __tablename__ = 'gasto'
 
     IdGasto = Column(Integer, primary_key=True)
     IdSucursal = Column(Integer)
@@ -55,7 +43,7 @@ class TipoGasto(Base):
 
 
 class Venta(Base):
-    __tablename__ = 'ventas'
+    __tablename__ = 'venta'
 
     IdVenta = Column(Integer, primary_key=True)
     Fecha = Column(Date)
@@ -69,12 +57,84 @@ class Venta(Base):
     Cantidad = Column(Integer)
     
 class Sucursal(Base):
-    __tablename__ = 'sucursales'
+    __tablename__ = 'sucursal'
 
-    ID = Column(Integer, primary_key=True)
-    Sucursal = Column(String(100))
-    Direccion = Column(String(500))
-    Localidad = Column(String(200))
-    Provincia = Column(String(100))
+    IdSucursal = Column(Integer, primary_key=True)
+    Sucursal = Column(String(255))
+    Domicilio = Column(String(255))
+    IdLocalidad = Column(Integer)
     Latitud = Column(Float)
     Longitud = Column(Float)
+
+class Calendario(Base):
+    __tablename__ = 'calendario'
+    id = Column(Integer, primary_key=True)
+    fecha = Column(Date)
+    anio = Column(Integer)
+    mes = Column(Integer)
+    dia = Column(Integer)
+    trimestre = Column(Integer)
+    semana = Column(Integer)
+    dia_nombre = Column(String(100))
+    mes_nombre = Column(String(100))
+
+class CanalVenta(Base):
+    __tablename__ = 'canal_venta'
+    id = Column(Integer, primary_key=True)
+    Canal = Column(String(150))
+
+class Empleado(Base):
+    __tablename__ = 'empleado'
+
+    id = Column(Integer, primary_key=True)
+    codigo_empleado = Column(Integer)
+    apellido = Column(String(300))
+    nombre = Column(String(255))
+    id_sucursal = Column(Integer)
+    id_sector = Column(Integer)
+    id_cargo = Column(Integer)
+    salario = Column(Float)
+
+class Localidad(Base): 
+    __tablename__ = 'localidad'
+
+    id = Column(Integer, primary_key=True)
+    localidad = Column(String(255))
+    id_provincia = Column(Integer)
+    latitud = Column(Float)
+    longitud = Column(Float)
+
+class Producto(Base): 
+    __tablename__ = 'producto'
+
+    id = Column(Integer, primary_key=True)
+    producto = Column(String(300))
+    precio = Column(Float)
+    id_tipo_producto = Column(Integer)
+
+class Proveedor(Base): 
+    __tablename__ = 'proveedor'
+
+    id = Column(Integer, primary_key=True)
+    nombre = Column(String(150))
+    domicilio = Column(String(500))
+    id_localidad = Column(Integer)
+
+class Provincia(Base): 
+    __tablename__ = 'provincia'
+
+    id = Column(Integer, primary_key=True)
+    provincia = Column(String(255))
+
+
+class Comision(Base): 
+    __tablename__ = 'comision'
+
+    id = Column(Integer, primary_key=True)
+    codigo_empleado = Column(Integer)
+    id_sucursal = Column(Integer)
+    apellido_y_nombre = Column(String(500))
+    sucursal = Column(String(255))
+    anio = Column(Integer)
+    mes = Column(Integer)
+    porcentaje = Column(Float)
